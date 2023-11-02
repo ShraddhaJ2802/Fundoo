@@ -1,23 +1,21 @@
 package com.bridgelab.funapp.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.bridgelab.funapp.dto.UserDTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "User_Data")
 @Data
 @NoArgsConstructor
+@Document(collection = "User")
 public class User {
 	
 	@Id
-	@GeneratedValue
-	private long id;
+	private String id;
 	private String name;
 	private String email;
 	private String password;
@@ -32,6 +30,4 @@ public class User {
 		this.verify =false;
 		
 	}
-
-	
 }

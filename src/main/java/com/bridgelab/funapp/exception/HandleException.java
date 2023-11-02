@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.bridgelab.funapp.exception.LabelCustomeException;
+import com.bridgelab.funapp.exception.UserCustomException;
 import com.bridgelab.funapp.dto.ResponseDto;
 
 //To handle all exception  global exception
@@ -28,20 +30,35 @@ public class HandleException {
 	}
 	
 	@ExceptionHandler(FunToCustomException.class)
-	   
-	   public ResponseEntity<ResponseDto> handleNoterCustomException(FunToCustomException exception)
-	   {
-			ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
-			return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
-
+	public ResponseEntity<ResponseDto> handleNoterCustomException(FunToCustomException exception){
+		ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
+		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
 	   }
 
 	@ExceptionHandler(UserCustomException.class)
-	   
-	   public ResponseEntity<ResponseDto> handleUserCustomException(UserCustomException exception)
-	   {
-			ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
-			return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
-
+	public ResponseEntity<ResponseDto> handleUserCustomException(UserCustomException exception)
+	{
+		ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
+		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+		}
+	
+	@ExceptionHandler(LabelCustomeException.class)
+	public ResponseEntity<ResponseDto> handlLabelCustomException(LabelCustomeException exception)
+	{
+		ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
+		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
 	   }
+	
+	@ExceptionHandler(CollabratorCustomException.class)
+	public ResponseEntity<ResponseDto> handleCollabratorCustomException(CollabratorCustomException exception)
+	{
+		ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",exception.getMessage());
+		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+		}
+	
+	@ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+		ResponseDto responseDto = new ResponseDto("Exception while processing REST Request",e.getMessage());        
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
 }

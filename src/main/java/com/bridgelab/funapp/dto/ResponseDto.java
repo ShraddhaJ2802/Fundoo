@@ -21,6 +21,7 @@ public class ResponseDto {
 	public void setData(Object data) {
 		this.data = data;
 	}
+	
 	@Override
 	public String toString() {
 		return "ResponseDto [message=" + message + ", data=" + data + "]";

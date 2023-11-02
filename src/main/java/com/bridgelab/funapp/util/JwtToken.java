@@ -11,17 +11,17 @@ public class JwtToken {
 	//A JWT token is divided into 3 parts namely – header, payload, and signature 
 	public final String SECRET = "SHRADDHA";
 	//To create the token
-	public String createToken(long id){
+	public String createToken(String id){
 	return JWT.create()
 	.withClaim("id",id)
 	.sign(Algorithm.HMAC256(SECRET));
 	}
-	public long decodeToken(String token){
-	long id =0;
+	public String decodeToken(String token){
+	String id ="";
 	if(token !=null){
 	id = JWT.require(Algorithm.HMAC256(SECRET))
 	.build().verify(token)
-	.getClaim("id").asLong();
+	.getClaim("id").asString();
 	}
 	return id;
 	}

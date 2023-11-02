@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelab.funapp.dto.NoteDTO;
@@ -29,11 +30,15 @@ import jakarta.validation.Valid;
 @RequestMapping("/notes/api")
 public class NoteController {
 	
-	// dependency injection of Note service
+	//dependency injection of Note service
 	@Autowired
 	NoteService trashService;
 	
-	//To create note with the url are notes/api/add . Here  pass the token at time of login user 
+	/* Purpose: this method is used to create the note
+	 * @RequestHeader token this is used for authorized user to access and also to take email 
+	 * add to note which can become collaborator
+	 * @RequestBody note  this is used for send json data can be list of labels ,collaborator id which get from user 
+	 * @return returns proper response entity of showing proper response to the user */ 
 	
 	@PostMapping("/add")
 	 public ResponseEntity<ResponseDto> createNote( @RequestHeader String token, @Valid  @RequestBody NoteDTO note )
@@ -43,8 +48,8 @@ public class NoteController {
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.CREATED);
 	 }
 	
-
-	//To find all notes present in table with url notes/api/getall
+	/* Purpose: this method is used to to find all notes 
+	 * @return returns proper response entity of showing proper response to the user */ 
 	
 	@GetMapping("/getall")
 	public ResponseEntity<ResponseDto> getAllNote()
@@ -54,78 +59,101 @@ public class NoteController {
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
 	}
 	
-	//To find note using note id with url is notes/api/get/{id}. Pass the note id as  parameter
+	/* Purpose: this method is used to find particular note
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id this can specify which note id pass which can find note
+	 * returns proper response entity of showing proper response to the user  */
 	
 	@GetMapping("/get/{id}")
-	public ResponseEntity<ResponseDto> getById(@RequestHeader String token , @PathVariable long id)
+	public ResponseEntity<ResponseDto> getById(@RequestHeader String token , @PathVariable String id)
 	{
 		Notes note= trashService.getById(token,id);
 		ResponseDto respDto = new ResponseDto("Find the note" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
 	}
 	
-	//Delete note by note id with url is notes/api/delete/1. Pass the note id as the parameter
+	/* Purpose: this method is used to delete particular note
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id this can specify which note id pass which can delete note
+	 * returns proper response entity of showing proper response to the user */
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteNotes(@RequestHeader String token, @PathVariable long id  )
+	public ResponseEntity<Void> deleteNotes(@RequestHeader String token, @PathVariable String id  )
 	{
 		trashService.deleteNotes(token,id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	//Update the note with help of note id and url is notes/api/update/{id}.Pass the note id as the parameter
+	/* Purpose: this method is used to modify the note data
+	 * @RequestHeader token this is used for authorized user to access this method 
+	 * @PathVariable id this can specify which note id pass which can update note
+	   @RequestBody  notes pass  this is used for send json data which get from user
+	 * returns proper response entity of showing proper response to the user */
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<ResponseDto> updateNotes(@RequestHeader String token, @PathVariable long id , @RequestBody NoteDTO notes )
+	public ResponseEntity<ResponseDto> updateNotes(@RequestHeader String token, @PathVariable String id , @RequestBody NoteDTO 			notes )
 	{
 		Notes note = trashService.updateNotes(token,id, notes);
 		ResponseDto respDto = new ResponseDto("Update the note" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.OK);
 	}
 	
-	// to set the archeived is true and save it and url is notes/api/updatearchievd/{id} 
-	//pass the note id as parameter.
+	/* Purpose: this method is used to update the archived is to set  true
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id pass the note id for update archived.
+	 * returns proper response entity of showing proper response to the user*/
 	
 	@PutMapping("/updatearchievd/{id}")
-	public ResponseEntity<ResponseDto> updateArchievd(@RequestHeader String token, @PathVariable long id  )
+	public ResponseEntity<ResponseDto> updateArchievd(@RequestHeader String token, @PathVariable String id  )
 	{
 		Notes note = trashService.updateArchievd(token, id);
 		ResponseDto respDto = new ResponseDto("Archieved are successfully done" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.OK);
 	}
 	
-	//to set the trash is true and url is notes/api/updatetrash/{id}
-	//pass the note id as parameter
+	/* Purpose: this method is used to update the trash is to set  true
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id pass the note id for update trash .
+	 * returns proper response entity of showing proper response to the user */
 	
 	@PutMapping("/updatetrash/{id}")
-	public ResponseEntity<ResponseDto> updateTrash(@RequestHeader String token, @PathVariable long id  )
+	public ResponseEntity<ResponseDto> updateTrash(@RequestHeader String token, @PathVariable String id  )
 	{
 		Notes note = trashService.updateTrash(token,id);
 		ResponseDto respDto = new ResponseDto("Trash are successfully done" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.OK);
 	}
 	
-	//to set the archievd is false and url is notes/api/updateunarchievd/{id}.Pass the note id as parameter
+	/* Purpose: this method is used to update the archived is to set  false
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id pass the note id for update archived.
+	 * returns proper response entity of showing proper response to the user */
 	
 	@PutMapping("/updateunarchievd/{id}")
-	public ResponseEntity<ResponseDto> updateUnarchievd(@RequestHeader String token,@PathVariable long id  )
+	public ResponseEntity<ResponseDto> updateUnarchievd(@RequestHeader String token,@PathVariable String id  )
 	{
 		Notes note = trashService.updateUnarchievd(token,id);
 		ResponseDto respDto = new ResponseDto("Unarchieved are successfully done" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.OK);
 	}
 	
-	//to set the trash is false and url is notes/api/updateuntrash/{id}.Pass the note id as parameter
+	/* Purpose: this method is used to update the trash is to set  false
+	 * @RequestHeader token this is used for authorized user to access this method
+	 * @PathVariable id pass the note id for update trash .
+	 * returns proper response entity of showing proper response to the user*/
 	
 	@PutMapping("/updateuntrash/{id}")
-	public ResponseEntity<ResponseDto> updateUntrash(@RequestHeader String token,@PathVariable long id  )
+	public ResponseEntity<ResponseDto> updateUntrash(@RequestHeader String token,@PathVariable String id  )
 	{
 		Notes note = trashService.updateUntrash(token,id);
 		ResponseDto respDto = new ResponseDto("Untrash are successfully done" , note);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.OK);
 	}
 	
-	//To find the notes using user id and url is notes/api//getbyUserId and pass the jwt token 
+	/* Purpose: this method is used for find the notes 
+	 * @RequestHeader token this is used for authorized user to access this method and  to take the user id 
+	 * from token  to find out notes
+	 * returns proper response entity of showing proper response to the user*/
 	
 	@GetMapping("/getbyUserId")
 	public Optional<Notes> getByUserId(@RequestHeader String token)
@@ -133,20 +161,26 @@ public class NoteController {
 		return trashService.getByUserId(token);
 	}
 	
-	//find note list by label wise and url is notes/api/displayNotes and pass the label name as parameter
-	
-	@GetMapping("/displayNotes/{label}")
-	public ResponseEntity<ResponseDto> getNotesByLabel(@PathVariable String label)
+	/* Purpose: this method is used for find the notes 
+	  @PathVariable label id passing the label id which note user want
+	 * returns proper response entity of showing proper response to the user*/
+		
+	@GetMapping("/displayNotes/{labelid}")
+	public ResponseEntity<ResponseDto> getNotesByLabel(@PathVariable String labelid)
 	{
-		List<Notes> notes =  trashService.getNotesByLabel(label);
+		List<Notes> notes =  trashService.findByLabelId(labelid);
 		System.out.println(notes);
 		ResponseDto respDto = new ResponseDto("Get Call for notes successfull" , notes);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
 		
 	}
 	
+	/* Purpose: this method is used for find the labels 
+	  @PathVariable noteId passing the note  id which label list user want
+	 * returns proper response entity of showing proper response to the user*/
+	
 	@GetMapping("/displayLabel/{noteId}")
-	public ResponseEntity<ResponseDto> getLabelsByNoteId(@PathVariable long noteId)
+	public ResponseEntity<ResponseDto> getLabelsByNoteId(@PathVariable String noteId)
 	{
 		List<String> labelList =  trashService.getLabelsByNoteId(noteId);
 		if(labelList == null)
@@ -158,8 +192,6 @@ public class NoteController {
 		{
 			ResponseDto respDto = new ResponseDto("Get Call for label successfull" , labelList);
 			return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
-		}
-		
+		}	
 	}
-	
 }

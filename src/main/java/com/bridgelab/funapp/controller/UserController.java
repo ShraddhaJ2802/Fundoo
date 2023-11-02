@@ -27,10 +27,14 @@ import jakarta.validation.Valid;
 @RequestMapping("/user/api")
 public class UserController {
 	
+	//dependency injection of User service
 	@Autowired
 	UserService userService;
 	
 	//To register validate user and url is /user/api/add
+	/* Purpose: this method is used to register the user
+	 * @RequestBody user  this is used for send json data which are get from user 
+	 * @return returns proper response entity of showing proper response to the user */ 
 	
 	@PostMapping("/add")
 	 public ResponseEntity<ResponseDto> registrationUser(@Valid @RequestBody UserDTO user)
@@ -46,11 +50,10 @@ public class UserController {
 			ResponseDto respDto = new ResponseDto("Registration  successfully done" , userData);
 			return new ResponseEntity<ResponseDto>(respDto , HttpStatus.CREATED);
 		}
-		
-		
 	 }
 	
-	//To find all users and url is /user/api/getalluser
+	/* Purpose: this method is used to To find all user 
+	 * @return returns proper response entity of showing proper response to the user */ 
 	
 	@GetMapping("/getalluser")
 	public ResponseEntity<ResponseDto> getAllUser()
@@ -61,35 +64,45 @@ public class UserController {
 		
 	}
 	
-	//To find the user by id and url is user/api/get/{id} and pass the user id as parameter
+	/* Purpose: this method is used to find particular user
+	 * @PathVariable id this can specify which user id pass which can find user
+	 * returns proper response entity of showing proper response to the user  */
 	
 	@GetMapping("/get/{id}")
-	public ResponseEntity<ResponseDto> getById(@PathVariable long id)
+	public ResponseEntity<ResponseDto> getById(@PathVariable String id)
 	{
 		User user = userService.getById(id);
 		ResponseDto respDto = new ResponseDto("To find  user" , user);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
 	}
 	
-	//To delete the user and url is user/api/delete/{id} and pass the user id as parameter
+	/* Purpose: this method is used to delete the user
+	 * @PathVariable id this can specify which user id pass then it can delete user
+	 * returns proper response entity of showing proper response to the user */
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable long id  )
+	public ResponseEntity<Void> deleteUser(@PathVariable String id  )
 	{
 		userService.deleteUser(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	//update the user and url is user/api/update/{id} and pass the user id as parameter 
+	/* Purpose: this method is used to modify the user data
+	 * @PathVariable id this can specify which user id pass which can update user
+	   @RequestBody  user pass  this is used for send json data which get from client
+	 * returns proper response entity of showing proper response to the user */
+	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<ResponseDto> updateUser(@PathVariable long id , @RequestBody UserDTO user )
+	public ResponseEntity<ResponseDto> updateUser(@PathVariable String id , @RequestBody UserDTO user )
 	{
 		User userData = userService.updateUser(id, user);
 		ResponseDto respDto = new ResponseDto("Upadate user  successfully " , userData);
 		return new ResponseEntity<ResponseDto>(respDto , HttpStatus.FOUND);
 	}
 	
-	// this api for login , to check the credential passing through email and password and url is user/api/login
+	/* Purpose: this method is used for login ,to check credential of the user
+	 * @RequestParam email and password to pass method argument using this to check credential
+	 * returns proper response entity of showing proper response to the user */
 	
 	@PostMapping("/login")
 	public  ResponseEntity<ResponseDto> logIn(@RequestParam String email ,@RequestParam String password)
@@ -107,7 +120,9 @@ public class UserController {
 		}
 	}
 	
-	// to verify the user using through email and otp at time of user registration time and api url is user/api/verifyuser
+	/* Purpose: this method is used for verify the user
+	 * @RequestParam email and otp using this  verify user.
+	 * returns proper response entity of showing proper response to the user */
 	
 	@PostMapping("/verifyuser")
 	public  ResponseEntity<ResponseDto> verifyUser(@RequestParam String email ,@RequestParam int otp)
